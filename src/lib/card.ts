@@ -25,22 +25,27 @@ export type Card = number
 
 const SUITE_BIN_SIZE = 2
 const RANK_BIN_SIZE = 4
-const SUITE_MASK = (1 << SUITE_BIN_SIZE) - 1
-const RANK_MASK = (1 << RANK_BIN_SIZE) - 1
+const SUITE_MASK = (1 << SUITE_BIN_SIZE) - 1 // 0b11
+const RANK_MASK = ((1 << (RANK_BIN_SIZE + SUITE_BIN_SIZE)) - 1) & ~SUITE_MASK // 0b1111_00
 
 export const createCard = (suite: Suite, rank: Rank): Card => {
   return ((rank << SUITE_BIN_SIZE) & RANK_MASK) | (suite & SUITE_MASK)
 }
-export const getSuite = (card: Card): Suite => {
+
+export const getSuite = (card: Readonly<Card>): Suite => {
   return (card & SUITE_MASK) as Suite
 }
 
-export const getRank = (card: Card): Rank => {
-  return ((card >> SUITE_BIN_SIZE) & RANK_MASK) as Rank
+export const getRank = (card: Readonly<Card>): Rank => {
+  return ((card & RANK_MASK) >> SUITE_BIN_SIZE) as Rank
 }
 
-export const getCardString = (card: Card): string => {
+function getKeyByValue(object: Record<string, number>, value: number) {
+  return Object.keys(object).find((key) => object[key] === value)
+}
+
+export const getCardString = (card: Readonly<Card>): string => {
   const rank = getRank(card)
   const suite = getSuite(card)
-  return `${rank}-${suite}`
+  return `${getKeyByValue(Rank, rank)} ${getKeyByValue(Suite, suite)}`
 }
