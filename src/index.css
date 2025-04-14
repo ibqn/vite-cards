@@ -1,1 +1,14 @@
 @import 'tailwindcss';
+
+:root {
+  --og-card-width: 63mm;
+  --og-card-height: 88mm;
+  --card-scale-factor: 0.7;
+  --card-width: calc(var(--og-card-width) * var(--card-scale-factor));
+  --card-height: calc(var(--og-card-height) * var(--card-scale-factor));
+}
+
+@theme inline {
+  --spacing-card-width: var(--card-width);
+  --spacing-card-height: var(--card-height);
+}

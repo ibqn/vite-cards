@@ -2,17 +2,20 @@ import { getRank, getSuite, Suite, Rank } from '@/lib/card'
 import type { Card as CardType } from '@/lib/card'
 import { cn } from '@/utils/class-names'
 import type { ComponentProps } from 'react'
+import { motion } from 'motion/react'
 
 type Props = {
   card?: CardType
   flipped?: boolean
   noShadow?: boolean
+  grayOut?: boolean
 } & ComponentProps<'div'>
 
 export const Card = ({
   card,
   flipped,
   noShadow,
+  grayOut,
   className,
   ...props
 }: Props) => {
@@ -23,14 +26,23 @@ export const Card = ({
   return (
     <div
       {...props}
-      className={cn(
-        'relative select-none',
-        !noShadow && 'shadow-lg shadow-zinc-500/40 drop-shadow-xl',
-        isFace && 'rounded-lg border-white bg-white p-1',
-        className
-      )}
+      className={cn('h-card-height w-card-width relative', className)}
     >
-      <img src={src} />
+      <motion.img
+        layoutId={card?.toString()}
+        animate={{
+          filter: grayOut ? 'contrast(0.55)' : 'contrast(1)',
+          transition: {
+            duration: 1.5,
+          },
+        }}
+        className={cn(
+          'select-none',
+          !noShadow && 'shadow-lg shadow-zinc-500/40 drop-shadow-xl',
+          isFace && 'rounded-lg border-white bg-white p-1'
+        )}
+        src={src}
+      />
     </div>
   )
 }
