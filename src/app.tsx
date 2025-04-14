@@ -1,7 +1,7 @@
 import { Card } from '@/components/card'
-import { cn } from './utils/class-names'
-import { randomInt } from './lib/random'
-import { shuffle } from './lib/shuffle'
+import { cn } from '@/utils/class-names'
+import { randomInt } from '@/lib/random'
+import { shuffle } from '@/lib/shuffle'
 
 export const App = () => {
   return (
