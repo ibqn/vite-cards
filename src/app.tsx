@@ -6,6 +6,7 @@ import { useState } from 'react'
 import type { Card as CardType } from '@/lib/card'
 import { CardHolder } from '@/components/card-holder'
 import { AnimatePresence } from 'motion/react'
+import { produce } from 'immer'
 
 export const App = () => {
   const [cards, setCards] = useState(() =>
@@ -22,9 +23,7 @@ export const App = () => {
         <div>
           <button
             className="flex cursor-pointer rounded border bg-white px-2 py-1 hover:bg-white/80"
-            onClick={() => {
-              setCards(shuffle(cards.slice()))
-            }}
+            onClick={() => setCards(produce((draft) => shuffle(draft)))}
           >
             shuffle
           </button>
