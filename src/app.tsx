@@ -1,5 +1,4 @@
 import { Card } from '@/components/card'
-import { cn } from '@/utils/class-names'
 import { randomInt } from '@/lib/random'
 import { shuffle } from '@/lib/shuffle'
 import { useState } from 'react'
@@ -7,6 +6,7 @@ import type { Card as CardType } from '@/lib/card'
 import { CardHolder } from '@/components/card-holder'
 import { AnimatePresence } from 'motion/react'
 import { produce } from 'immer'
+import { motion } from 'motion/react'
 
 export const App = () => {
   const [cards, setCards] = useState(() =>
@@ -17,7 +17,7 @@ export const App = () => {
   )
 
   return (
-    <div className="grid min-h-screen items-center gap-2 bg-green-950 p-2">
+    <div className="grid min-h-screen items-center gap-2 overflow-hidden bg-green-950 p-2">
       <div className="flex items-center gap-2">
         <Card />
         <div>
@@ -30,20 +30,22 @@ export const App = () => {
         </div>
 
         <CardHolder
-          className="w-26"
           onClick={() => {
             const randomCard = selectedCard ? undefined : randomInt(36)
-            console.log('selectedCard', randomCard)
             setSelectedCard(randomCard)
 
-            let newCards = cards.slice()
-            if (randomCard !== undefined) {
-              newCards = newCards.filter((card) => card !== randomCard)
-            } else {
-              newCards.push(selectedCard!)
-            }
-
-            setCards(newCards)
+            setCards(
+              produce((draft) => {
+                if (randomCard !== undefined) {
+                  const index = draft.findIndex((card) => card === randomCard)
+                  if (index !== -1) {
+                    draft.splice(index, 1)
+                  }
+                } else {
+                  draft.push(selectedCard!)
+                }
+              })
+            )
           }}
         >
           <AnimatePresence mode="wait">
@@ -51,16 +53,19 @@ export const App = () => {
           </AnimatePresence>
         </CardHolder>
       </div>
-
-      <div className="flex flex-row overflow-y-auto">
-        {cards.map((card, idx) => (
-          <Card
-            key={card}
-            flipped={false}
-            card={card}
-            className={cn(idx !== 0 && '-ml-26')}
-          />
-        ))}
+      <div className="h-card-height relative flex flex-row">
+        <AnimatePresence>
+          {cards.map((card, idx) => (
+            <motion.div
+              className="absolute"
+              key={card}
+              animate={{ x: idx * 40, y: 0 }}
+              transition={{ type: 'tween' }}
+            >
+              <Card flipped={false} card={card} />
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
     </div>
   )
