@@ -4,9 +4,8 @@ import { shuffle } from '@/lib/shuffle'
 import { useState } from 'react'
 import type { Card as CardType } from '@/lib/card'
 import { CardHolder } from '@/components/card-holder'
-import { AnimatePresence } from 'motion/react'
+import { AnimatePresence, motion } from 'motion/react'
 import { produce } from 'immer'
-import { motion } from 'motion/react'
 
 export const App = () => {
   const [cards, setCards] = useState(() =>
