@@ -11,9 +11,7 @@ export const App = () => {
   const [cards, setCards] = useState(() =>
     Array.from({ length: 36 }, (_, i) => i)
   )
-  const [selectedCard, setSelectedCard] = useState<undefined | CardType>(
-    undefined
-  )
+  const [selectedCard, setSelectedCard] = useState<CardType | null>(null)
 
   return (
     <div className="grid min-h-screen items-center gap-2 overflow-hidden bg-green-950 p-2">
@@ -30,12 +28,12 @@ export const App = () => {
 
         <CardHolder
           onClick={() => {
-            const randomCard = selectedCard ? undefined : randomInt(36)
+            const randomCard = selectedCard ? null : randomInt(36)
             setSelectedCard(randomCard)
 
             setCards(
               produce((draft) => {
-                if (randomCard !== undefined) {
+                if (randomCard !== null) {
                   const index = draft.findIndex((card) => card === randomCard)
                   if (index !== -1) {
                     draft.splice(index, 1)
